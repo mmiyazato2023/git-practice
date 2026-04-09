@@ -1,4 +1,4 @@
-name: Test Workflow
+name: AWS Test
 
 on:
   push:
@@ -6,9 +6,19 @@ on:
       - main
 
 jobs:
-  test:
+  aws-test:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Hello
-        run: echo "GitHub Actions 動いた！"
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: S3 List
+        run: aws s3 ls
